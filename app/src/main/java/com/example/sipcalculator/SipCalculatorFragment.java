@@ -26,7 +26,9 @@ import org.eazegraph.lib.charts.PieChart;
 import org.eazegraph.lib.models.PieModel;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.concurrent.Executors;
 
 public class SipCalculatorFragment extends Fragment {
@@ -47,6 +49,8 @@ public class SipCalculatorFragment extends Fragment {
     float totalInvestment;
     private RadioGroup radioGroupInvestmentType;
     String selectedInvestmentType = "SIP";
+
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -62,12 +66,9 @@ public class SipCalculatorFragment extends Fragment {
         addSIP =view.findViewById(R.id.btnAddSIP);
         pieChart = view.findViewById(R.id.piechart);
         // Initialize mutual funds
-        mutualFunds = new ArrayList<>();
-        mutualFunds.add(new MutualFund("Fund A", 5.0F));
-        mutualFunds.add(new MutualFund("Fund B", 6.5F));
-        mutualFunds.add(new MutualFund("Fund C", 4.2F));
+        getMutualFundsFromDB();
 
-        adapter = new SpinAdapter(view.getContext(),
+         adapter = new SpinAdapter(view.getContext(),
                 android.R.layout.simple_spinner_item,
                 mutualFunds);
         spinnerMF = (Spinner) view.findViewById(R.id.spinnerMutualFunds);
@@ -148,6 +149,21 @@ public class SipCalculatorFragment extends Fragment {
 
 
         return view;
+    }
+
+    private void getMutualFundsFromDB() {
+//        Executors.newSingleThreadExecutor().execute(() -> {
+//            AppDatabase db = AppDatabase.getDatabase(getContext());
+//            Set<MutualFund> uniqueMutualFunds = new HashSet<>(db.mutualFundDao().getAll());
+//            mutualFunds.addAll(uniqueMutualFunds);
+//        });
+        mutualFunds = new ArrayList<>();
+        mutualFunds.add(new MutualFund("SBI",5));
+        mutualFunds.add(new MutualFund("Canara roboco",6));
+        mutualFunds.add(new MutualFund("SBI 2",5));
+        mutualFunds.add(new MutualFund("SBI 3",5));
+        mutualFunds.add(new MutualFund("SBI 4",5));
+        mutualFunds.add(new MutualFund("SBI 5",5));
     }
 
     private float calculateTotalInvestment(int amount, String selectedInvestmentType, int periodInt) {

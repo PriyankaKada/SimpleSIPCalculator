@@ -14,6 +14,7 @@ import androidx.fragment.app.FragmentTransaction;
 
 import com.example.sipcalculator.database.AppDatabase;
 import com.example.sipcalculator.database.DatabaseInitializer;
+import com.example.sipcalculator.database.MutualFund;
 import com.example.sipcalculator.database.MutualFundDao;
 import com.google.android.material.tabs.TabLayout;
 
@@ -35,7 +36,7 @@ public class MainActivity extends AppCompatActivity {
                 // Handle tab selection and load the respective fragment
                 int position = tab.getPosition();
                 if (position == 0) {
-                    openFragment(new SipCalculatorFragment());
+                    openFragment(new LumpsumCalculatorFragment());
                 } else if (position == 1) {
                     openFragment(new LumpsumCalculatorFragment());
                 }
