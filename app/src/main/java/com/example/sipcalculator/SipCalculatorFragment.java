@@ -39,19 +39,18 @@ public class SipCalculatorFragment extends Fragment {
     private final List<MutualFund> mutualFunds = new ArrayList<>();
 
     private Spinner spinnerMF;
-    private TextView textViewRateOfInterest;
-    private TextView textExpectedReturns;
-    private TextView textTotalAmount;
+    private TextView textViewRateOfInterest,textExpectedReturns,textTotalAmount;
+
     private SpinAdapter adapter;
-    private Button calculate;
-    private Button addSIP;
+    private Button calculate,addSIP;
+
     MutualFund selectMF;
-    EditText etAmount;
-    EditText period;
-    float totalAmountOnMaturity;
-    float totalGain;
+    EditText etAmount,period;
+
+    float totalAmountOnMaturity,totalGain,totalInvestment;
+
     PieChart pieChart;
-    float totalInvestment;
+
     private RadioGroup radioGroupInvestmentType;
     String selectedInvestmentType = "SIP";
     private ProgressBar progressBar;
@@ -100,7 +99,7 @@ public class SipCalculatorFragment extends Fragment {
             public void onCheckedChanged(RadioGroup group, int checkedId) {
                 RadioButton selectedRadioButton = view.findViewById(checkedId);
                 selectedInvestmentType = selectedRadioButton.getText().toString();
-
+                resetViews(view);
             }
         });
 
@@ -120,7 +119,7 @@ public class SipCalculatorFragment extends Fragment {
 
                 textExpectedReturns.setText("Expected Returns: "+ totalGain);
                 textTotalAmount.setText("Total Amount on Maturity: "+totalAmountOnMaturity );
-
+                pieChart.setVisibility(View.VISIBLE);
                 pieChart.addPieSlice(
                         new PieModel(
                                 "R",
@@ -152,6 +151,18 @@ public class SipCalculatorFragment extends Fragment {
 
 
         return view;
+    }
+
+    private void resetViews(View view) {
+
+        etAmount.setText("");
+        period.setText("");
+        textViewRateOfInterest.setText("Rate Of Interest: ");
+        textExpectedReturns.setText("Expected Return");
+        textTotalAmount.setText("Total amount on Maturity:");
+        pieChart.setVisibility(View.GONE);
+        spinnerMF.setAdapter(adapter);
+
     }
 
     private void getMutualFundsFromDB() {
