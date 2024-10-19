@@ -18,6 +18,7 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -88,6 +89,23 @@ public class SipCalculatorFragment extends Fragment {
         showDetails.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if (etAmount.getText().toString().isEmpty()){
+                    Toast.makeText(getContext(),"Amount is Empty",Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                if (period.getText().toString().isEmpty()){
+                    Toast.makeText(getContext(),"Period is Empty",Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                int amount = Integer.parseInt(etAmount.getText().toString());
+                int periodInt = Integer.parseInt(period.getText().toString());
+
+                if (selectedInvestmentType.equalsIgnoreCase("SIP")) {
+                    list = SIPCalculator.calculateSIPReturns(amount, periodInt, selectMF.getReturnPercentage());
+                }else{
+                    list = LumpSumCalculator.calculateLumpSumReturns(amount,periodInt,selectMF.getReturnPercentage());
+                }
+
                 FragmentManager fragmentManager = getParentFragmentManager();
                 InvestmentListFragment investmentListFragment = new InvestmentListFragment();
 
@@ -134,6 +152,15 @@ public class SipCalculatorFragment extends Fragment {
             @SuppressLint("SetTextI18n")
             @Override
             public void onClick(View v) {
+                if (etAmount.getText().toString().isEmpty()){
+                    Toast.makeText(getContext(),"Amount is Empty",Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                if (period.getText().toString().isEmpty()){
+                    Toast.makeText(getContext(),"Period is Empty",Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
                 pieChart.clearChart();
                 totalInvestment =0;
                 totalGain=0;
@@ -146,9 +173,6 @@ public class SipCalculatorFragment extends Fragment {
                 }else{
                     list = LumpSumCalculator.calculateLumpSumReturns(amount,periodInt,selectMF.getReturnPercentage());
                 }
-                    for(int i=0;i<list.size();i++){
-                        System.out.println("LIST ITEM"+list.get(i));
-                    }
                     int size=list.size();
                     YearlyInvestment yearlyInvestment = list.get(size-1);
 
@@ -164,15 +188,18 @@ public class SipCalculatorFragment extends Fragment {
 
 
                 pieChart.setVisibility(View.VISIBLE);
+                pieChart.setValueTextColor(Color.BLACK);
+                pieChart.setValueTextSize(24);
+                pieChart.setUseInnerPadding(false);
                 pieChart.addPieSlice(
                         new PieModel(
-                                "R",
+                                "Total Gain",
                                 Integer.parseInt(""+(int)totalGain),
                                 Color.parseColor("#FFA726")));
 
                 pieChart.addPieSlice(
                         new PieModel(
-                                "R",
+                                "Total Investment",
                                 Integer.parseInt(""+(int)totalInvestment),
                                 Color.parseColor("#66BB6A")));
 
@@ -235,39 +262,6 @@ public class SipCalculatorFragment extends Fragment {
         });
     }
 
-
-    private float calculateTotalInvestment(int amount, String selectedInvestmentType, int periodInt) {
-        if (selectedInvestmentType.equals("Lumpsum")) {
-            return amount; // For lumpsum, total investment is just the principal amount
-        } else {
-            return amount * periodInt * 12; // For SIP, it's the monthly amount multiplied by months
-        }
-    }
-
-    public static float calculateMaturityAmount(int investment, float annualRate, int years, String selectedInvestmentType) {
-        float maturityAmount = 0.0F;
-
-        if (selectedInvestmentType.equalsIgnoreCase("SIP")) {
-            // Calculate maturity amount for SIP
-            int monthlyInvestment = investment; // Monthly SIP amount
-            float monthlyRate = annualRate / 100 / 12; // Monthly interest rate
-            int totalMonths = years * 12;
-
-            for (int i = 0; i < totalMonths; i++) {
-                maturityAmount += monthlyInvestment * Math.pow(1 + monthlyRate, totalMonths - i);
-            }
-        } else if (selectedInvestmentType.equalsIgnoreCase("Lumpsum")) {
-            // Calculate maturity amount for Lumpsum
-            int principalAmount = investment; // Lumpsum amount
-            float monthlyRate = annualRate / 100 / 12; // Monthly interest rate
-            int totalMonths = years * 12;
-
-            // Compound interest formula
-            maturityAmount = principalAmount * (float) Math.pow(1 + monthlyRate, totalMonths);
-        }
-
-        return maturityAmount;
-    }
     // Method to format currency
     private String formatCurrency(double amount) {
         NumberFormat numberFormat = NumberFormat.getCurrencyInstance(new Locale("en", "IN"));
