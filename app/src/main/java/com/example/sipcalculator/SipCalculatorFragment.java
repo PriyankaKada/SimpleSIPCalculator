@@ -6,6 +6,7 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.os.Parcelable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,17 +22,22 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 
 import com.example.sipcalculator.database.AppDatabase;
 import com.example.sipcalculator.database.MutualFund;
 import com.example.sipcalculator.database.SIPRecord;
+import com.example.sipcalculator.reports.SIPCalculator;
+import com.example.sipcalculator.reports.YearlyInvestment;
 
 import org.eazegraph.lib.charts.PieChart;
 import org.eazegraph.lib.models.PieModel;
 
+import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Locale;
 import java.util.Set;
 import java.util.concurrent.Executors;
 
@@ -39,17 +45,18 @@ public class SipCalculatorFragment extends Fragment {
     private final List<MutualFund> mutualFunds = new ArrayList<>();
 
     private Spinner spinnerMF;
-    private TextView textViewRateOfInterest,textExpectedReturns,textTotalAmount;
+    private TextView textViewRateOfInterest,textExpectedReturns,textTotalAmount,tvTotalAmountInvested;
 
     private SpinAdapter adapter;
-    private Button calculate,addSIP;
+    private Button calculate,addSIP,showDetails;
 
     MutualFund selectMF;
     EditText etAmount,period;
 
-    float totalAmountOnMaturity,totalGain,totalInvestment;
+    double totalAmountOnMaturity,totalGain,totalInvestment;
 
     PieChart pieChart;
+    List<YearlyInvestment> list;
 
     private RadioGroup radioGroupInvestmentType;
     String selectedInvestmentType = "SIP";
@@ -64,6 +71,7 @@ public class SipCalculatorFragment extends Fragment {
 
         spinnerMF = view.findViewById(R.id.spinnerMutualFunds);
         textViewRateOfInterest = view.findViewById(R.id.tvInterestRate);
+        tvTotalAmountInvested = view.findViewById(R.id.tvTotalAmountInvested);
         textExpectedReturns = view.findViewById(R.id.tvExpectedReturn);
         etAmount = view.findViewById(R.id.etAmount);
         period = view.findViewById(R.id.etYears);
@@ -72,9 +80,27 @@ public class SipCalculatorFragment extends Fragment {
         textTotalAmount =view.findViewById(R.id.tvTotalAmount);
         addSIP =view.findViewById(R.id.btnAddSIP);
         pieChart = view.findViewById(R.id.piechart);
+        showDetails= view.findViewById(R.id.showDetails);
         // Initialize mutual funds
         getMutualFundsFromDB();
 
+        showDetails.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                FragmentManager fragmentManager = getParentFragmentManager();
+                InvestmentListFragment investmentListFragment = new InvestmentListFragment();
+
+                // Create a bundle and pass the investment list
+                Bundle bundle = new Bundle();
+                bundle.putParcelableArrayList("investmentList", (ArrayList<? extends Parcelable>) list);
+                investmentListFragment.setArguments(bundle);
+
+                fragmentManager.beginTransaction()
+                        .replace(R.id.fragment_container, investmentListFragment)
+                        .addToBackStack(null)
+                        .commit();
+            }
+        });
 
         spinnerMF.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
 
@@ -107,18 +133,33 @@ public class SipCalculatorFragment extends Fragment {
             @SuppressLint("SetTextI18n")
             @Override
             public void onClick(View v) {
-                int amount=Integer.parseInt(etAmount.getText().toString());
-                int periodInt=Integer.parseInt(period.getText().toString());
+                pieChart.clearChart();
+                totalInvestment =0;
+                totalGain=0;
+                // Fetch inputs and calculate
+                int amount = Integer.parseInt(etAmount.getText().toString());
+                int periodInt = Integer.parseInt(period.getText().toString());
 
 
-                // Calculate total investment and maturity amount
-                float maturityAmount = (float) calculateMaturityAmount(amount, selectMF.getReturnPercentage(), periodInt,selectedInvestmentType);
-                totalInvestment = calculateTotalInvestment(amount,selectedInvestmentType,periodInt);
-                 totalGain = maturityAmount - totalInvestment;
-                 totalAmountOnMaturity=totalInvestment+totalGain;
+                list=SIPCalculator.calculateSIPReturns(amount,periodInt, selectMF.getReturnPercentage());
 
-                textExpectedReturns.setText("Expected Returns: "+ totalGain);
-                textTotalAmount.setText("Total Amount on Maturity: "+totalAmountOnMaturity );
+                    for(int i=0;i<list.size();i++){
+                        System.out.println("LIST ITEM"+list.get(i));
+                    }
+                    int size=list.size();
+                    YearlyInvestment yearlyInvestment = list.get(size-1);
+
+                totalGain = yearlyInvestment.getTotalReturns();
+                totalInvestment = yearlyInvestment.getTotalInvested();
+                totalAmountOnMaturity = totalInvestment + totalGain;
+
+                // Update UI
+                tvTotalAmountInvested.setText("Invested Amount: " + formatCurrency(totalInvestment));
+                textExpectedReturns.setText("Expected Returns: " + formatCurrency(totalGain));
+                textTotalAmount.setText("Total Amount on Maturity: " + formatCurrency(totalAmountOnMaturity));
+
+
+
                 pieChart.setVisibility(View.VISIBLE);
                 pieChart.addPieSlice(
                         new PieModel(
@@ -135,6 +176,7 @@ public class SipCalculatorFragment extends Fragment {
                 pieChart.startAnimation();
             }
         });
+
 
         addSIP.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -157,6 +199,8 @@ public class SipCalculatorFragment extends Fragment {
 
         etAmount.setText("");
         period.setText("");
+        tvTotalAmountInvested.setText("Invested Amount: ");
+
         textViewRateOfInterest.setText("Rate Of Interest: ");
         textExpectedReturns.setText("Expected Return");
         textTotalAmount.setText("Total amount on Maturity:");
@@ -190,22 +234,20 @@ public class SipCalculatorFragment extends Fragment {
 
 
     private float calculateTotalInvestment(int amount, String selectedInvestmentType, int periodInt) {
-
-        if(selectedInvestmentType.equals("Lumpsum")){
-            totalInvestment= amount*periodInt;
-        }else{
-            totalInvestment = amount * periodInt * 12;
+        if (selectedInvestmentType.equals("Lumpsum")) {
+            return amount; // For lumpsum, total investment is just the principal amount
+        } else {
+            return amount * periodInt * 12; // For SIP, it's the monthly amount multiplied by months
         }
-        return  totalInvestment;
     }
 
-    public static double calculateMaturityAmount(double investment, double annualRate, int years, String selectedInvestmentType) {
-        double maturityAmount = 0;
+    public static float calculateMaturityAmount(int investment, float annualRate, int years, String selectedInvestmentType) {
+        float maturityAmount = 0.0F;
 
         if (selectedInvestmentType.equalsIgnoreCase("SIP")) {
             // Calculate maturity amount for SIP
-            double monthlyInvestment = investment; // Assuming this is the monthly SIP amount
-            double monthlyRate = annualRate / 100 / 12; // Convert annual rate to monthly
+            int monthlyInvestment = investment; // Monthly SIP amount
+            float monthlyRate = annualRate / 100 / 12; // Monthly interest rate
             int totalMonths = years * 12;
 
             for (int i = 0; i < totalMonths; i++) {
@@ -213,14 +255,20 @@ public class SipCalculatorFragment extends Fragment {
             }
         } else if (selectedInvestmentType.equalsIgnoreCase("Lumpsum")) {
             // Calculate maturity amount for Lumpsum
-            double principalAmount = investment; // Assuming this is the lumpsum amount
-            double monthlyRate = annualRate / 100 / 12; // Convert annual rate to monthly
+            int principalAmount = investment; // Lumpsum amount
+            float monthlyRate = annualRate / 100 / 12; // Monthly interest rate
             int totalMonths = years * 12;
 
-            maturityAmount = principalAmount * Math.pow(1 + monthlyRate, totalMonths);
+            // Compound interest formula
+            maturityAmount = principalAmount * (float) Math.pow(1 + monthlyRate, totalMonths);
         }
 
         return maturityAmount;
+    }
+    // Method to format currency
+    private String formatCurrency(double amount) {
+        NumberFormat numberFormat = NumberFormat.getCurrencyInstance(new Locale("en", "IN"));
+        return numberFormat.format(amount);
     }
 
 }

@@ -9,11 +9,11 @@ public class DatabaseInitializer {
     public static void populateDatabase(final MutualFundDao dao) {
         new Thread(() -> {
             MutualFund[] mutualFunds = new MutualFund[] {
-                new MutualFund("Fund A", 8.5f),
-                new MutualFund("Fund B", 10.0f),
-                new MutualFund("Fund C", 7.2f),
-                new MutualFund("Fund D", 9.3f),
-                new MutualFund("Fund E", 11.5f)
+                new MutualFund("Aditya Birla", 8.5f),
+                new MutualFund("SBI Mutual Fund", 10.0f),
+                new MutualFund("Canera Roboco", 7.2f),
+                new MutualFund("HDFC Securities", 9.3f),
+                new MutualFund("Nippon Small Cap Funds", 11.5f)
             };
 
             for (MutualFund fund : mutualFunds) {

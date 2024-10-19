@@ -11,7 +11,7 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="SIP Calculator"
+        android:text="Investment Calculator"
         android:textSize="24sp"
         android:textStyle="bold"
         android:paddingBottom="16dp"
@@ -31,6 +31,14 @@
         android:paddingBottom="16dp">
 
         <RadioButton
+            android:id="@+id/radioSIP"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="SIP"
+            android:textSize="18sp"
+            android:padding="8dp"
+            android:checked="true"/>
+        <RadioButton
             android:id="@+id/radioLumpsum"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -38,14 +46,6 @@
             android:textSize="18sp"
             android:padding="8dp"/>
 
-        <RadioButton
-            android:id="@+id/radioSIP"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="SIP"
-            android:textSize="18sp"
-            android:padding="8dp"
-            android:checked="true"/> <!-- Default selection -->
     </RadioGroup>
 
     <Spinner
@@ -74,6 +74,7 @@
         android:hint="Enter Amount to Invest"
         android:padding="12dp"
         android:layout_margin="8dp"
+        android:inputType="number"
         android:background="@drawable/edit_text_background"/>
 
     <EditText
@@ -83,6 +84,7 @@
         android:hint="Enter number of years"
         android:layout_margin="8dp"
         android:padding="12dp"
+        android:inputType="number"
         android:background="@drawable/edit_text_background"/>
 
     <Button
@@ -93,6 +95,15 @@
         android:textColor="@android:color/white"
         android:backgroundTint="@color/colorPrimary"
         android:layout_marginTop="16dp"/>
+
+    <TextView
+        android:id="@+id/tvTotalAmountInvested"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Invested Amount:"
+        android:textSize="16sp"
+        android:layout_marginTop="8dp"/>
+
 
     <TextView
         android:id="@+id/tvExpectedReturn"
@@ -110,11 +121,21 @@
         android:textSize="16sp"
         android:layout_marginTop="8dp"/>
 
+
     <Button
         android:id="@+id/btnAddSIP"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Add SIP"
+        android:textColor="@android:color/white"
+        android:backgroundTint="@color/colorPrimary"
+        android:layout_marginTop="16dp"/>
+
+    <Button
+        android:id="@+id/showDetails"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Show Details"
         android:textColor="@android:color/white"
         android:backgroundTint="@color/colorPrimary"
         android:layout_marginTop="16dp"/>
