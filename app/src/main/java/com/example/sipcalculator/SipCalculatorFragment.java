@@ -50,7 +50,7 @@ public class SipCalculatorFragment extends Fragment {
     private TextView textViewRateOfInterest,textExpectedReturns,textTotalAmount,tvTotalAmountInvested;
 
     private SpinAdapter adapter;
-    private Button calculate,addSIP,showDetails;
+    private Button calculate,addSIP,showDetails,reset;
 
     MutualFund selectMF;
     EditText etAmount,period;
@@ -63,12 +63,12 @@ public class SipCalculatorFragment extends Fragment {
     private RadioGroup radioGroupInvestmentType;
     String selectedInvestmentType = "SIP";
     private ProgressBar progressBar;
-
+    View view;
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
-        View view = inflater.inflate(R.layout.fragment_sip_calculator, container, false);
+         view = inflater.inflate(R.layout.fragment_sip_calculator, container, false);
         progressBar = view.findViewById(R.id.progressBar);
 
         spinnerMF = view.findViewById(R.id.spinnerMutualFunds);
@@ -82,10 +82,16 @@ public class SipCalculatorFragment extends Fragment {
         textTotalAmount =view.findViewById(R.id.tvTotalAmount);
 //        addSIP =view.findViewById(R.id.btnAddSIP);
         pieChart = view.findViewById(R.id.piechart);
+        reset = view.findViewById(R.id.reset);
         showDetails= view.findViewById(R.id.showDetails);
         // Initialize mutual funds
         getMutualFundsFromDB();
-
+        reset.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                resetViews(view);
+            }
+        });
         showDetails.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -97,6 +103,7 @@ public class SipCalculatorFragment extends Fragment {
                     Toast.makeText(getContext(),"Period is Empty",Toast.LENGTH_SHORT).show();
                     return;
                 }
+
                 int amount = Integer.parseInt(etAmount.getText().toString());
                 int periodInt = Integer.parseInt(period.getText().toString());
 
@@ -162,8 +169,6 @@ public class SipCalculatorFragment extends Fragment {
                 }
 
                 pieChart.clearChart();
-                totalInvestment =0;
-                totalGain=0;
                 // Fetch inputs and calculate
                 int amount = Integer.parseInt(etAmount.getText().toString());
                 int periodInt = Integer.parseInt(period.getText().toString());
@@ -223,6 +228,13 @@ public class SipCalculatorFragment extends Fragment {
 
 
         return view;
+    }
+
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        resetViews(view);
     }
 
     private void resetViews(View view) {

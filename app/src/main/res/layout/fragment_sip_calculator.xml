@@ -111,7 +111,16 @@
             android:text="Show Details"
             android:textColor="@android:color/white"
             android:backgroundTint="@color/colorPrimary"/>
+
     </LinearLayout>
+    <Button
+        android:id="@+id/reset"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+
+        android:text="Reset"
+        android:textColor="@android:color/white"
+        android:backgroundTint="@color/colorPrimary"/>
 
     <TextView
         android:id="@+id/tvTotalAmountInvested"
