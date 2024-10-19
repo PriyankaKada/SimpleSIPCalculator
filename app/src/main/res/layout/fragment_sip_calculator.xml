@@ -28,7 +28,8 @@
         android:id="@+id/radioGroupInvestmentType"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingBottom="16dp">
+        android:paddingBottom="16dp"
+        android:orientation="horizontal">
 
         <RadioButton
             android:id="@+id/radioSIP"
@@ -45,7 +46,6 @@
             android:text="Lumpsum"
             android:textSize="18sp"
             android:padding="8dp"/>
-
     </RadioGroup>
 
     <Spinner
@@ -87,14 +87,31 @@
         android:inputType="number"
         android:background="@drawable/edit_text_background"/>
 
-    <Button
-        android:id="@+id/btnCalculate"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Calculate"
-        android:textColor="@android:color/white"
-        android:backgroundTint="@color/colorPrimary"
-        android:layout_marginTop="16dp"/>
+        android:orientation="horizontal"
+        android:layout_marginTop="16dp">
+
+        <Button
+            android:id="@+id/btnCalculate"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Calculate"
+            android:textColor="@android:color/white"
+            android:backgroundTint="@color/colorPrimary"
+            android:layout_marginEnd="8dp"/>
+
+        <Button
+            android:id="@+id/showDetails"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Show Details"
+            android:textColor="@android:color/white"
+            android:backgroundTint="@color/colorPrimary"/>
+    </LinearLayout>
 
     <TextView
         android:id="@+id/tvTotalAmountInvested"
@@ -103,7 +120,6 @@
         android:text="Invested Amount:"
         android:textSize="16sp"
         android:layout_marginTop="8dp"/>
-
 
     <TextView
         android:id="@+id/tvExpectedReturn"
@@ -121,24 +137,14 @@
         android:textSize="16sp"
         android:layout_marginTop="8dp"/>
 
-
-    <Button
-        android:id="@+id/btnAddSIP"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Add SIP"
-        android:textColor="@android:color/white"
-        android:backgroundTint="@color/colorPrimary"
-        android:layout_marginTop="16dp"/>
-
-    <Button
-        android:id="@+id/showDetails"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Show Details"
-        android:textColor="@android:color/white"
-        android:backgroundTint="@color/colorPrimary"
-        android:layout_marginTop="16dp"/>
+<!--    <Button-->
+<!--        android:id="@+id/btnAddSIP"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:text="Add SIP"-->
+<!--        android:textColor="@android:color/white"-->
+<!--        android:backgroundTint="@color/colorPrimary"-->
+<!--        android:layout_marginTop="16dp"/>-->
 
     <org.eazegraph.lib.charts.PieChart
         android:id="@+id/piechart"

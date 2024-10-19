@@ -79,7 +79,7 @@ public class SipCalculatorFragment extends Fragment {
         calculate =view.findViewById(R.id.btnCalculate);
         textTotalAmount =view.findViewById(R.id.tvTotalAmount);
         textTotalAmount =view.findViewById(R.id.tvTotalAmount);
-        addSIP =view.findViewById(R.id.btnAddSIP);
+//        addSIP =view.findViewById(R.id.btnAddSIP);
         pieChart = view.findViewById(R.id.piechart);
         showDetails= view.findViewById(R.id.showDetails);
         // Initialize mutual funds
@@ -181,17 +181,17 @@ public class SipCalculatorFragment extends Fragment {
         });
 
 
-        addSIP.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // Insert SIP record in a background thread using Executors
-                SIPRecord sipRecord = new SIPRecord(selectMF.getName(), totalGain ,totalAmountOnMaturity, selectedInvestmentType);
-                Executors.newSingleThreadExecutor().execute(() -> {
-                    AppDatabase db = AppDatabase.getDatabase(getContext());
-                    db.sipRecordDao().insert(sipRecord);
-                });
-            }
-        });
+//        addSIP.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                // Insert SIP record in a background thread using Executors
+//                SIPRecord sipRecord = new SIPRecord(selectMF.getName(), totalGain ,totalAmountOnMaturity, selectedInvestmentType);
+//                Executors.newSingleThreadExecutor().execute(() -> {
+//                    AppDatabase db = AppDatabase.getDatabase(getContext());
+//                    db.sipRecordDao().insert(sipRecord);
+//                });
+//            }
+//        });
 
 
 
