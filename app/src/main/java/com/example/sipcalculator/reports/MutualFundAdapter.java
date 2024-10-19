@@ -1,6 +1,5 @@
 package com.example.sipcalculator.reports;
 
-import android.annotation.SuppressLint;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -29,7 +28,6 @@ public class MutualFundAdapter extends RecyclerView.Adapter<MutualFundAdapter.Vi
     }
 
 
-    @SuppressLint("DefaultLocale")
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         SIPRecord fund = mutualFundList.get(position);

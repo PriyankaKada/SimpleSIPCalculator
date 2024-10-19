@@ -3,6 +3,8 @@ package com.example.sipcalculator.database;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
+import java.util.Objects;
+
 @Entity(tableName = "mutual_fund")
 public class MutualFund {
     @PrimaryKey(autoGenerate = true)
@@ -10,6 +12,19 @@ public class MutualFund {
     private String name;
     private float returnPercentage;
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof MutualFund)) return false;
+        MutualFund that = (MutualFund) o;
+        return Float.compare(that.returnPercentage, returnPercentage) == 0 &&
+                name.equals(that.name);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(name, returnPercentage);
+    }
     public MutualFund(String name, float returnPercentage) {
         this.name = name;
         this.returnPercentage = returnPercentage;

@@ -1,14 +1,18 @@
 package com.example.sipcalculator;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Spinner;
@@ -32,7 +36,8 @@ import java.util.Set;
 import java.util.concurrent.Executors;
 
 public class SipCalculatorFragment extends Fragment {
-    private List<MutualFund> mutualFunds;
+    private final List<MutualFund> mutualFunds = new ArrayList<>();
+
     private Spinner spinnerMF;
     private TextView textViewRateOfInterest;
     private TextView textExpectedReturns;
@@ -49,12 +54,15 @@ public class SipCalculatorFragment extends Fragment {
     float totalInvestment;
     private RadioGroup radioGroupInvestmentType;
     String selectedInvestmentType = "SIP";
-
+    private ProgressBar progressBar;
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+
         View view = inflater.inflate(R.layout.fragment_sip_calculator, container, false);
+        progressBar = view.findViewById(R.id.progressBar);
+
         spinnerMF = view.findViewById(R.id.spinnerMutualFunds);
         textViewRateOfInterest = view.findViewById(R.id.tvInterestRate);
         textExpectedReturns = view.findViewById(R.id.tvExpectedReturn);
@@ -67,10 +75,9 @@ public class SipCalculatorFragment extends Fragment {
         pieChart = view.findViewById(R.id.piechart);
         // Initialize mutual funds
         getMutualFundsFromDB();
-        SpinAdapter adapter = new SpinAdapter(getContext(), mutualFunds);
-        spinnerMF.setAdapter(adapter);
 
-          spinnerMF.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+
+        spinnerMF.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
 
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view,
@@ -148,19 +155,28 @@ public class SipCalculatorFragment extends Fragment {
     }
 
     private void getMutualFundsFromDB() {
-//        Executors.newSingleThreadExecutor().execute(() -> {
-//            AppDatabase db = AppDatabase.getDatabase(getContext());
-//            Set<MutualFund> uniqueMutualFunds = new HashSet<>(db.mutualFundDao().getAll());
-//            mutualFunds.addAll(uniqueMutualFunds);
-//        });
-        mutualFunds = new ArrayList<>();
-        mutualFunds.add(new MutualFund("SBI",5));
-        mutualFunds.add(new MutualFund("Canara roboco",6));
-        mutualFunds.add(new MutualFund("SBI 2",5));
-        mutualFunds.add(new MutualFund("SBI 3",5));
-        mutualFunds.add(new MutualFund("SBI 4",5));
-        mutualFunds.add(new MutualFund("SBI 5",5));
+        progressBar.setVisibility(View.VISIBLE);
+        Executors.newSingleThreadExecutor().execute(() -> {
+            AppDatabase db = AppDatabase.getDatabase(getContext());
+            List<MutualFund> funds = db.mutualFundDao().getAll();
+
+            // Use a Set to eliminate duplicates
+            Set<MutualFund> uniqueFunds = new HashSet<>(funds);
+
+            // Switch back to the main thread to update the UI
+            new Handler(Looper.getMainLooper()).post(() -> {
+                mutualFunds.clear();
+                mutualFunds.addAll(uniqueFunds); // Add unique funds to the list
+
+                // Initialize the adapter after fetching data
+                adapter = new SpinAdapter(getContext(), mutualFunds);
+                spinnerMF.setAdapter(adapter);
+
+                progressBar.setVisibility(View.GONE);
+            });
+        });
     }
+
 
     private float calculateTotalInvestment(int amount, String selectedInvestmentType, int periodInt) {
 
