@@ -36,7 +36,7 @@ public class MainActivity extends AppCompatActivity {
                 // Handle tab selection and load the respective fragment
                 int position = tab.getPosition();
                 if (position == 0) {
-                    openFragment(new LumpsumCalculatorFragment());
+                    openFragment(new SipCalculatorFragment());
                 } else if (position == 1) {
                     openFragment(new LumpsumCalculatorFragment());
                 }

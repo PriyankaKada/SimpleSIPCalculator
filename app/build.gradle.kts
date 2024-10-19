@@ -45,6 +45,8 @@ dependencies {
     implementation ("com.github.blackfizz:eazegraph:1.2.2@aar")
     implementation ("com.nineoldandroids:library:2.4.0")
     implementation ("com.google.android.material:material:1.8.0")
+    implementation ("androidx.cardview:cardview:1.0.0")
+
     androidTestImplementation(libs.ext.junit)
 
     androidTestImplementation(libs.espresso.core)
