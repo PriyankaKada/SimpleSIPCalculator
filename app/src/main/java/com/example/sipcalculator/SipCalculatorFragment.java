@@ -27,6 +27,7 @@ import androidx.fragment.app.FragmentManager;
 import com.example.sipcalculator.database.AppDatabase;
 import com.example.sipcalculator.database.MutualFund;
 import com.example.sipcalculator.database.SIPRecord;
+import com.example.sipcalculator.reports.LumpSumCalculator;
 import com.example.sipcalculator.reports.SIPCalculator;
 import com.example.sipcalculator.reports.YearlyInvestment;
 
@@ -140,9 +141,11 @@ public class SipCalculatorFragment extends Fragment {
                 int amount = Integer.parseInt(etAmount.getText().toString());
                 int periodInt = Integer.parseInt(period.getText().toString());
 
-
-                list=SIPCalculator.calculateSIPReturns(amount,periodInt, selectMF.getReturnPercentage());
-
+                if (selectedInvestmentType.equalsIgnoreCase("SIP")) {
+                    list = SIPCalculator.calculateSIPReturns(amount, periodInt, selectMF.getReturnPercentage());
+                }else{
+                    list = LumpSumCalculator.calculateLumpSumReturns(amount,periodInt,selectMF.getReturnPercentage());
+                }
                     for(int i=0;i<list.size();i++){
                         System.out.println("LIST ITEM"+list.get(i));
                     }
