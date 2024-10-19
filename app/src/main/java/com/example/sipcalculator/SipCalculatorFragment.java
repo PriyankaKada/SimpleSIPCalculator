@@ -67,14 +67,10 @@ public class SipCalculatorFragment extends Fragment {
         pieChart = view.findViewById(R.id.piechart);
         // Initialize mutual funds
         getMutualFundsFromDB();
+        SpinAdapter adapter = new SpinAdapter(getContext(), mutualFunds);
+        spinnerMF.setAdapter(adapter);
 
-         adapter = new SpinAdapter(view.getContext(),
-                android.R.layout.simple_spinner_item,
-                mutualFunds);
-        spinnerMF = (Spinner) view.findViewById(R.id.spinnerMutualFunds);
-        spinnerMF.setAdapter(adapter); // Set the custom adapter to the spinner
-        // You can create an anonymous listener to handle the event when is selected an spinner item
-        spinnerMF.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+          spinnerMF.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
 
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view,
