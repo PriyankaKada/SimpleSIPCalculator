@@ -1,0 +1,124 @@
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="16dp"
+    android:background="@android:color/white"
+    tools:ignore="MissingClass">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="SIP Calculator"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        android:paddingBottom="16dp"
+        android:gravity="center"/>
+
+    <RadioGroup
+        android:id="@+id/radioGroupInvestmentType"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingBottom="16dp">
+
+        <RadioButton
+            android:id="@+id/radioLumpsum"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Lumpsum"
+            android:textSize="18sp"
+            android:padding="8dp"/>
+
+        <RadioButton
+            android:id="@+id/radioSIP"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="SIP"
+            android:textSize="18sp"
+            android:padding="8dp"
+            android:checked="true"/> <!-- Default selection -->
+
+    </RadioGroup>
+
+
+
+    <Spinner
+        android:id="@+id/spinnerMutualFunds"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="8dp"
+        android:layout_margin="8dp"
+        android:background="@android:drawable/edit_text"
+        android:spinnerMode="dropdown"/>
+
+    <TextView
+        android:id="@+id/tvInterestRate"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Interest Rate: "
+        android:textSize="16sp"
+        android:padding="8dp"
+        android:layout_margin="8dp"
+        android:paddingBottom="8dp"/>
+    <EditText
+        android:id="@+id/etAmount"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Enter Amount to Invest"
+        android:padding="12dp"
+        android:layout_margin="8dp"
+        android:background="@drawable/edit_text_background"/>
+
+    <EditText
+        android:id="@+id/etYears"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Enter number of years"
+        android:layout_margin="8dp"
+        android:padding="12dp"
+        android:background="@drawable/edit_text_background"/>
+
+    <Button
+        android:id="@+id/btnCalculate"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Calculate"
+        android:textColor="@android:color/white"
+        android:backgroundTint="@color/colorPrimary"
+        android:layout_marginTop="16dp"/>
+
+    <TextView
+        android:id="@+id/tvExpectedReturn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Expected Return: "
+        android:textSize="16sp"
+        android:layout_marginTop="16dp"/>
+
+    <TextView
+        android:id="@+id/tvTotalAmount"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Total Amount on Maturity: "
+        android:textSize="16sp"
+        android:layout_marginTop="8dp"/>
+
+    <Button
+        android:id="@+id/btnAddSIP"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Add SIP"
+        android:textColor="@android:color/white"
+        android:backgroundTint="@color/colorPrimary"
+        android:layout_marginTop="16dp"/>
+
+    <org.eazegraph.lib.charts.PieChart
+        android:id="@+id/piechart"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="6dp"
+        android:layout_marginTop="15dp"
+        android:layout_marginBottom="15dp"/>
+</LinearLayout>
