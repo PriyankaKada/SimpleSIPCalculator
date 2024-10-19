@@ -6,13 +6,13 @@
     android:orientation="vertical"
     android:padding="16dp">
 
-    <!-- Tab Layout for Buttons -->
-    <com.google.android.material.tabs.TabLayout
-        android:id="@+id/tab_layout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:tabMode="fixed"
-        app:tabGravity="fill" />
+<!--    &lt;!&ndash; Tab Layout for Buttons &ndash;&gt;-->
+<!--    <com.google.android.material.tabs.TabLayout-->
+<!--        android:id="@+id/tab_layout"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        app:tabMode="fixed"-->
+<!--        app:tabGravity="fill" />-->
 
     <FrameLayout
         android:id="@+id/fragment_container"
